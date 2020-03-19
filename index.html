@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+path {
+  fill: #ccc;
+  stroke: #fff;
+  stroke-width: .5px;
+}
+
+path.active {
+  fill: pink;
+}
+
+</style>
+<body>
+<script src="//d3js.org/d3.v4.min.js"></script>
+<script src="//d3js.org/d3.geo.projection.v2.min.js"></script>
+
+<script>
+
+var width = 960,
+    height = 500;
+
+var projection = d3.geoMercator();
+  
+var path = d3.geoPath()
+  .projection(projection)
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var url = "lombardy.geojson";
+
+d3.json(url, function(error, countries) {
+  if (error) console.log(error);
+  
+  console.log("geojson", countries);
+ 
+  svg.selectAll("path")
+    .data(countries.features)
+  .enter().append("path")
+    .attr("d", path)
+    .on("mouseover",function(d) {
+    	console.log("just had a mouseover", d3.select(d));
+    	d3.select(this)
+      	.classed("active",true)
+  	})
+  	.on("mouseout",function(d){
+    	d3.select(this)
+      	.classed("active",false)
+    })  
+});
+
+</script>
